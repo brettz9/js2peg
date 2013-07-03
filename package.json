@@ -1,0 +1,31 @@
+{
+    "name": "js2peg",
+    "version": "0.1.0",
+    "author": {
+        "name": "Brett Zamir",
+        "email": "brettz9@yahoo.com",
+        "url": "brett-zamir.me"
+    },
+    "description": "Converts a custom JavaScript syntax format into the PegJS file format",
+    "main": "./js2peg",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/brettz9/js2peg.git"
+    },
+    "keywords": [
+        "pegjs",
+        "grammar",
+        "parser"
+    ],
+    "bundledDependencies": [
+        "pegjs"
+    ],
+    "license": "MIT",
+    "engine": {
+        "node": ">=0.10"
+    },
+    "readmeFilename": "README.md",
+    "bugs": {
+        "url": "https://github.com/brettz9/js2peg/issues"
+    }
+}
