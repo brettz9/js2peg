@@ -85,6 +85,8 @@ The values on the `rules` object may be either a **string** to be:
 2. currently not preceded by whitespace
     1. An object with a `expr` property to be added directly to the grammar output (it is preferred to use the class methods where possible to create such objects).
 
+Note that while functions and regex objects/literals are possible for convenience, all of their functionality can be represented by represented by (or easily auto-converted into) JSON-friendly code (e.g., if a web-based IDE wished to allow users to store their own transforming parsers (whether for syntax highlighting or convenient custom conversion of user input into a more verbose but widely recognized format) and validate them in an easy manner).
+
 ## Class methods ##
 
 The following methods are of use internally or in defining modules.
