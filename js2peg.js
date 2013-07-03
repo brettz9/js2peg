@@ -241,11 +241,11 @@ js2peg.prototype.convert = function (rules, initializer) {
 
                 colonPos = parsingExpression.indexOf(':');
                 if (colonPos > -1) {
-                    prev += _expressionSequenceSpace + parsingExpression.slice(0, colonPos + 1);
-                    parsingExpression = parsingExpression.slice(colonPos + 1);
                     // colon label
+                    prev += _expressionSequenceSpace + parsingExpression.slice(0, colonPos + 1);
+                    parsingExpression = parsingExpression.slice(colonPos + 1); // We'll assume the content after the colon (if any) can be added directly
                 }
-                if (!_isECMAScriptIdentifier(parsingExpression)) {
+                else if (!_isECMAScriptIdentifier(parsingExpression)) {
                     throw 'An unrecognized parsing expression (and not confirming as an ECMAScript identifier) was provided: ' + parsingExpression + ' (which is part of the sequence: ' + parsingExpressionSeq + ')';
                 }
                 // rule name

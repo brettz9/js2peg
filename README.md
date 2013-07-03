@@ -60,67 +60,30 @@ One can then manually call the PegJS parser methods such as parse() or toSource(
 
 **Arguments**: (`rules`, `initializer = undefined`)
 
-1. colon-separated labels on rule names
-2. parsing expressions as single items or arrays
-3. initializer as curly-braced string or function whose body will be copied (via `Function.prototype.toString()`)
+The `initializer` is optional and if provided, can be a string wrapped in curly braces (`{...}`) or a function whose body will be copied (via `Function.prototype.toString()`) and then wrapped in curly braces to work as a PegJS grammar file (one can define arguments to the function, especially if one is in ECMAScript strict mode, to prevent issues with undefined variables, even though the function will not depend on these variables, depending solely on its string contents).
 
-```javascript
-if (typeof parsingExpression === 'string') {
-            if ([
-                '(', ')' 
-                ].indexOf(parsingExpression) > -1
-            ) {
-                return prev + _expressionSequenceSpace + parsingExpression;
-            }
-            if ([
-                    '*', '+', '?' // Regexp grouping, modifiers
-                ].indexOf(parsingExpression) > -1
-            ) {
-                return prev + parsingExpression; // No space as tokens above typically imply incomplete
-            }
-            if (([
-                    '&', '!', // See below on why may wish to disallow
-                    '.', // Regexp any
-                    '/' // PegJS OR
-                ].indexOf(parsingExpression) > -1) || 
-                parsingExpression.match(/^\[[\s\S]+\]i?$/) ||
-                parsingExpression.match(/^\{[\s\S]*\}$/) || 
-                parsingExpression.match(/^(['"])[\s\S]*\1i?$/)
-            ) {
-                return prev + _expressionSequenceSpace + parsingExpression;
-            }
-            colonPos = parsingExpression.indexOf(':');
-            if (colonPos > -1) {
-                prev += _expressionSequenceSpace + parsingExpression.slice(0, colonPos + 1);
-                parsingExpression = parsingExpression.slice(colonPos + 1);
-                // colon label
-            }
-            if (!_isECMAScriptIdentifier(parsingExpression)) {
-                throw 'An unrecognized parsing expression (and not confirming as an ECMAScript identifier) was provided: ' + parsingExpression + ' (which is part of the sequence: ' + parsingExpressionSeq + ')';
-            }
-            // rule name
-            return prev + _expressionSequenceSpace + parsingExpression;
-        }
-        if (typeof parsingExpression === 'function') {
-            return prev + _expressionSequenceSpace + _getFunctionContents(parsingExpression);
-        }
-        if (typeof parsingExpression === 'object') {
-            if ([
-                    '$', // This cannot be allowed as a literal, as a rule name could legitimately be "$" as a valid JS identifier
-                    '&', '!' // These could be allowed as literals, but as these are similar in purpose to '$', we may wish to require parity by disallowing these as literals
-                ].indexOf(parsingExpression.match) > -1) {
-                return prev + parsingExpression.match;
-            }
-            if (parsingExpression.source) {
-                return prev + parsingExpression.source + (parsingExpression.ignoreCase ? 'i' : '');
-            }
-            if (parsingExpression.literal) {
-                return prev + _expressionSequenceSpace + _stringify(parsingExpression.literal) + (parsingExpression.i || parsingExpression.ignoreCase ? 'i' : '');
-            }
-            if (parsingExpression.expr) { // Could just use "source"
-                return prev + parsingExpression.expr;
-            }
-```
+The `rules` object contains rule names (or rule names optionally followed by a colon and a string to serve as a PegJS rule name label) as keys.
+
+The values on the `rules` object may be either a **string** to be:
+
+1. preceded by whitespace...
+    1. for regex matches: `.`, `(`, `)`, `.`
+    2. for PegJS matching modifiers: `&` and `!`
+    3. for PegJS OR condition: `/`
+    4. for: `[...]` (regex matches), `{...}` (actions), `"..."` (literals)
+    5. an expression label with a colon (optionally followed by content to be added directly, such as a rule name)
+    6. a rule name
+2. not preceded by whitespace
+    1. `*`, `+`, `?`
+
+...or an **object** or **function** to be serialized and then:
+
+1. preceded by whitespace...
+    1. A function whose contents are to be converted into a string (via `Function.prototype.toString()`) and used as an action within the grammar output
+    2. An object with a `source` and optional `ignoreCase` property (as with a RegExp object or literal) to be added directly to the grammar output
+    3. An object with a `literal` and optional `i` or `ignoreCase` property (as with a RegExp object or literal) to be stringified and added to the grammar output
+2. currently not preceded by whitespace
+    1. An object with a `expr` property to be added directly to the grammar output (it is preferred to use the class methods where possible to create such objects).
 
 ## Class methods ##
 
