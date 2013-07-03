@@ -6,7 +6,7 @@ var _labelSpace = ' ',
     _ruleExpressionSeparator = '\n',
     _postEqual = ' ',
     _expressionSequenceSpace = ' ',
-    _ruleSeparator = '\n',
+    _ruleSeparator = '\n\n',
     _dummySeparator = '\x00',
     PEG = require('pegjs');
 
