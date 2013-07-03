@@ -22,7 +22,7 @@ var $J = require('../js2peg'),
     // parsed = parser.parse(str);
     parsed = parser.parse(str, 'value_chars');
 
-// console.log(j2p.output); // Can use this line instead of the next and then on command line, to pipe the PegJS grammar to a file, use: node testRFC5987.js > output.txt
-console.log(parsed);
+// console.log(j2p.output); // Can use this line instead of the next and then on command line, to pipe the PegJS grammar to a file, use: node testRFC5987.js > rfc5987.pegjs
+console.log(parsed); // node testRFC5987.js > rfc5987-output.js
 
 }());
