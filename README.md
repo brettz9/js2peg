@@ -162,3 +162,4 @@ A convenience method to call `js2peg.range()` with its `min` and `max` arguments
 3. Adapt PegJS to build array of objects whose keys reflect rule names
 4. Use PegJS to parse PegJS files and convert to the JavaScript format
 5. Convert from EBNF? http://standards.iso.org/ittf/PubliclyAvailableStandards/s026153_ISO_IEC_14977_1996(E).zip
+6. Check the whitespace generation more carefully to prevent redundant whitespace, etc.
