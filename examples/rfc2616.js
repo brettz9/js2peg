@@ -69,33 +69,21 @@ module.exports = {
     /*
     TEXT           = <any OCTET except CTLs,
                     but including LWS>
+    LWS            = [CRLF] 1*( SP | HT )
+    CRLF           = CR LF
+    CR             = <US-ASCII CR, carriage return (13)>
+    LF             = <US-ASCII LF, linefeed (10)>
+    SP             = <US-ASCII SP, space (32)>
+    HT             = <US-ASCII HT, horizontal-tab (9)>
     */
-    TEXT: /[\x09\x20-\x7e]/,
-    /*
-    TEXT: ['octet:OCTET', function (octet) {
-        if (octet.match(/^[\x00-\x1f\x7f]/) && // excepting CTL
-                !octet.match(/(?:\x0d\x0a)?[x20\x09]+/) // but including LWS
-*/
-/*
-LWS            = [CRLF] 1*( SP | HT )
-CRLF           = CR LF
-CR             = <US-ASCII CR, carriage return (13)>
-LF             = <US-ASCII LF, linefeed (10)>
-SP             = <US-ASCII SP, space (32)>
-HT             = <US-ASCII HT, horizontal-tab (9)>
-*/
-/*
-            ) {
-            return false;
-        }
-        return octet;
-    }],
-*/
+    // TEXT: /[\x09\x20-\x7e]/,
+    TEXT: ['(', '(', '&', '(', 'LWS', ')', '/', '!', '(', 'CTL', ')', ')', 'OCTET', ')', '+'],
+    LWS: ['CRLF', '?', '(', 'SP', '/', 'HT', ')', '+'],
+    HT: '"\t"',
     // qdtext         = <any TEXT except <">>
-    qdtext: /[\x09\x20\x21\x23-\x7e]/,
-    /*qdtext: ['text:TEXT', function (text) {
-        return (text === '"') ? false : text;
-    }],*/
+    // qdtext: /[\x09\x20\x21\x23-\x7e]/,
+    qdtext: ['(', '!', '(', "'\"'", ')', 'TEXT', ')'],
+
     // quoted-pair    = "\" CHAR
     'quoted_pair': ['"\\\\"', 'CHAR']
 };
