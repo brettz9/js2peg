@@ -22,6 +22,7 @@ var $J = require('../js2peg'),
     // parsed = parser.parse(str);
     parsed = parser.parse(str, 'value_chars');
 
+// console.log(j2p.output);
 console.log(parsed);
 
 }());

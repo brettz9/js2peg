@@ -194,7 +194,7 @@ js2peg.prototype.convert = function (rules, initializer) {
     this.output += ruleNames.reduce(function (output, ruleName) {
         var parsingExpressionSeq,
             label = null,
-            ruleNameLabel = ruleName.split(/:/);
+            ruleNameLabel = ruleName.split(':');
         
         ruleName = ruleNameLabel[0];
         if (ruleNameLabel.length > 1) {
@@ -221,8 +221,14 @@ js2peg.prototype.convert = function (rules, initializer) {
             }
             if (typeof parsingExpression === 'string') {
                 if ([
-                    '(', ')' 
-                    ].indexOf(parsingExpression) > -1
+                        '.', // Regexp any
+                        '(', ')' , // Regexp groupings
+                        '&', '!', // PegJS matching modifiers - See below on why may wish to disallow if $ is ever used as per one of the PegJS docs
+                        '/' // PegJS OR
+                    ].indexOf(parsingExpression) > -1 ||
+                    parsingExpression.match(/^\[[\s\S]+\]i?$/) ||
+                    parsingExpression.match(/^\{[\s\S]*\}$/) ||
+                    parsingExpression.match(/^(['"])[\s\S]*\1i?$/)
                 ) {
                     return prev + _expressionSequenceSpace + parsingExpression;
                 }
@@ -232,17 +238,7 @@ js2peg.prototype.convert = function (rules, initializer) {
                 ) {
                     return prev + parsingExpression; // No space as tokens above typically imply incomplete
                 }
-                if (([
-                        '&', '!', // See below on why may wish to disallow
-                        '.', // Regexp any
-                        '/' // PegJS OR
-                    ].indexOf(parsingExpression) > -1) || 
-                    parsingExpression.match(/^\[[\s\S]+\]i?$/) ||
-                    parsingExpression.match(/^\{[\s\S]*\}$/) || 
-                    parsingExpression.match(/^(['"])[\s\S]*\1i?$/)
-                ) {
-                    return prev + _expressionSequenceSpace + parsingExpression;
-                }
+
                 colonPos = parsingExpression.indexOf(':');
                 if (colonPos > -1) {
                     prev += _expressionSequenceSpace + parsingExpression.slice(0, colonPos + 1);
@@ -259,14 +255,16 @@ js2peg.prototype.convert = function (rules, initializer) {
                 return prev + _expressionSequenceSpace + _getFunctionContents(parsingExpression);
             }
             if (typeof parsingExpression === 'object') {
+                /*
                 if ([
                         '$', // This cannot be allowed as a literal, as a rule name could legitimately be "$" as a valid JS identifier
                         '&', '!' // These could be allowed as literals, but as these are similar in purpose to '$', we may wish to require parity by disallowing these as literals
                     ].indexOf(parsingExpression.match) > -1) {
                     return prev + parsingExpression.match;
                 }
+                */
                 if (parsingExpression.source) {
-                    return prev + parsingExpression.source + (parsingExpression.ignoreCase ? 'i' : '');
+                    return prev + _expressionSequenceSpace + parsingExpression.source + (parsingExpression.ignoreCase ? 'i' : '');
                 }
                 if (parsingExpression.literal) {
                     return prev + _expressionSequenceSpace + _stringify(parsingExpression.literal) + (parsingExpression.i || parsingExpression.ignoreCase ? 'i' : '');
