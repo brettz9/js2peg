@@ -15,7 +15,7 @@ var _labelSpace = ' ',
 * @constant
 */
 function _isECMAScriptIdentifier (val) {
-    return val.match(/^[a-z_$][0-9a-z_\$]*$/i);
+    return val.match(/^[a-z_$][0-9a-z_$]*$/i);
 }
 
 /**
