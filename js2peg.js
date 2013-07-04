@@ -191,12 +191,12 @@ js2peg.prototype.convert = function (rules, initializer) {
 
     initial += typeof initializer === 'function' ? _getFunctionContents(initializer) : (initializer || '');
 
-    this.output += ruleNames.reduce(function (output, ruleName) {
+    this.output += ruleNames.reduce(function (output, ruleNameSeq) {
         var parsingExpressionSeq,
             label = null,
-            ruleNameLabel = ruleName.split(':');
+            ruleNameLabel = ruleNameSeq.split(':'),
+            ruleName = ruleNameLabel[0];
         
-        ruleName = ruleNameLabel[0];
         if (ruleNameLabel.length > 1) {
             label = ruleNameLabel[1];
         }
@@ -209,15 +209,15 @@ js2peg.prototype.convert = function (rules, initializer) {
             output += _labelSpace + _stringify(label);
         }
         output += _ruleExpressionSeparator + indent + '=' + _postEqual;
-        
-        parsingExpressionSeq = rules[ruleName];
+
+        parsingExpressionSeq = rules[ruleNameSeq];
         parsingExpressionSeq = Array.isArray(parsingExpressionSeq) ? parsingExpressionSeq : [parsingExpressionSeq];
         
         output = parsingExpressionSeq.reduce(function (prev, parsingExpression, i, parsingExpressionSeq) {
 //console.log('i::'+i +'::'+parsingExpression);
             var colonPos;
             if (!parsingExpression) {
-                throw 'Null parsing expression provided (' + typeof parsingExpression + '): ' + parsingExpression;
+                throw 'Null parsing expression provided (' + typeof parsingExpression + '): ' + parsingExpression + ' as part of seq: ' + parsingExpressionSeq;
             }
             if (typeof parsingExpression === 'string') {
                 if ([
