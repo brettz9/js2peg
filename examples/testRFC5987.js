@@ -5,8 +5,8 @@
 var $J = require('../js2peg'),
     query = '//b',
     rfc5987 = require('./rfc5987-utils'),
-    // str = 'query*=UTF-8\'\'' + rfc5987.encodeValueChars(query),
     str = rfc5987.encodeValueChars(query),
+    // str = 'query*=UTF-8\'\'' + rfc5987.encodeValueChars(query),
     j2p = new $J(
         { // Optional configuration object
             semicolons: true,
