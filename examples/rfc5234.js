@@ -16,7 +16,7 @@ module.exports = {
     ALPHA: /[a-z]/i, // [/[\x41-\x5A]/, '/', /[\x61-\x7A]/]
     BIT: ['"0"', '/', '"1"'],
     CHAR: /[\x01-\x7F]/, // any 7-bit US-ASCII character, excluding NUL
-    CR: '"/x0D"', // carriage return
+    CR: '"\\x0D"', // carriage return
     CRLF: ['CR', 'LF'], // Internet standard newline
     CTL: /[\x00-\x1F\x7F]/, // controls
     DIGIT: /[0-9]/, // /[\x30-\x39]/
@@ -50,7 +50,7 @@ module.exports = {
     c_wsp: ['WSP', '/', '(', 'c_nl', 'WSP', ')'],
     c_nl: ['comment', '/', 'CRLF'], // comment or newline
     comment: ['";"', '(', 'WSP', '/', 'VCHAR', ')', '*', 'CRLF'], // ";" *(WSP / VCHAR) CRLF
-    alternation: ['concatenation', '(', 'c_wsp', '*', '/', 'c_wsp', '*', 'concatenation', ')', '*'], // concatenation *(*c-wsp "/" *c-wsp concatenation)
+    alternation: ['concatenation', '(', 'c_wsp', '*', '"/"', 'c_wsp', '*', 'concatenation', ')', '*'], // concatenation *(*c-wsp "/" *c-wsp concatenation)
     concatenation: ['repetition', '(', 'c_wsp', '+', 'repetition', ')', '*'], // repetition *(1*c-wsp repetition)
     repetition: ['repeat', '?', 'element'], // [repeat] element
     repeat: ['DIGIT', '+', '/', '(', 'DIGIT', '*', '"*"', 'DIGIT', '*', ')'], // 1*DIGIT / (*DIGIT "*" *DIGIT)

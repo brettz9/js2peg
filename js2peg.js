@@ -176,7 +176,6 @@ js2peg.prototype.parse = function (str, rules, initializer) {
 js2peg.prototype.buildParser = function (rules, initializer) {
     this.convert(rules, initializer);
     // Can call toSource() on parser to get source
-//console.log(this.output);
     this.parser = PEG.buildParser(this.output, this.parserOptions);
     return this.parser;
 };

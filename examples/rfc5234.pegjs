@@ -11,7 +11,7 @@ CHAR
     =  [\x01-\x7F];
 
 CR
-    =  "/x0D";
+    =  "\x0D";
 
 CRLF
     =  CR LF;
@@ -74,7 +74,7 @@ comment
     =  ";" ( WSP / VCHAR )* CRLF;
 
 alternation
-    =  concatenation ( c_wsp* / c_wsp* concatenation )*;
+    =  concatenation ( c_wsp* "/" c_wsp* concatenation )*;
 
 concatenation
     =  repetition ( c_wsp+ repetition )*;
