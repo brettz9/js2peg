@@ -136,6 +136,7 @@ function _exactly (item, num) {
 
 /**
 * 
+* @property {Boolean} sortRules Whether to sort rules alphabetically but with "start" rule on top (default is true)
 * @property {Number} indent Number of spaces to indent
 * @property {Boolean} semicolons Whether to insert semi-colons after rule parsing expressions
 * @property {Object} parserOptions Allows boolean options, "cache" and "trackLineAndColumn"
@@ -149,6 +150,7 @@ function js2peg (opts) {
     this.parser = null;
     // OPTIONS
     opts = opts || {};
+    this.sortRules = opts.sortRules !== false;
     this.indent = _repeat(opts.indent || 2);
     this.semicolons = !!opts.semicolons;
     this.parserOptions = opts.parserOptions || {}; 
@@ -174,6 +176,7 @@ js2peg.prototype.parse = function (str, rules, initializer) {
 js2peg.prototype.buildParser = function (rules, initializer) {
     this.convert(rules, initializer);
     // Can call toSource() on parser to get source
+//console.log(this.output);
     this.parser = PEG.buildParser(this.output, this.parserOptions);
     return this.parser;
 };
@@ -184,10 +187,14 @@ js2peg.prototype.convert = function (rules, initializer) {
         // initializerEndBrace = 0,
         initial = this.output,
         that = this,
-        ruleNames = Object.keys(rules).sort(function (a, b) {
+        ruleNames = Object.keys(rules);
+
+    if (this.sortRules) {
+        ruleNames.sort(function (a, b) {
             // Ensure start rule is at top
             return a === 'start' ? -1 : b === 'start' ? 1 : (a > b ? 1 : -1);
         });
+    }
 
     initial += typeof initializer === 'function' ? _getFunctionContents(initializer) : (initializer || '');
 
@@ -212,7 +219,7 @@ js2peg.prototype.convert = function (rules, initializer) {
 
         parsingExpressionSeq = rules[ruleNameSeq];
         parsingExpressionSeq = Array.isArray(parsingExpressionSeq) ? parsingExpressionSeq : [parsingExpressionSeq];
-        
+
         output = parsingExpressionSeq.reduce(function (prev, parsingExpression, i, parsingExpressionSeq) {
 //console.log('i::'+i +'::'+parsingExpression);
             var colonPos;

@@ -18,6 +18,7 @@ Invoke the constructor to setup initial configuration:
 ```javascript
 // Optional options object (below are shown the defaults)
 $J({
+    sortRules: true, // Whether to sort rules alphabetically but with "start" rule on top
     indent: 2, // Number of spaces to indent parsing expressions
     semicolons: false, // Whether to insert semi-colons after rule parsing expressions
     parserOptions: {
