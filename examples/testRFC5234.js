@@ -1,4 +1,4 @@
-/*globals require, escape, unescape*/
+/*globals require */
 (function () {
 'use strict';
 
