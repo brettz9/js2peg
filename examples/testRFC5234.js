@@ -2,8 +2,6 @@
 (function () {
 'use strict';
 
-// INCOMPLETE: Recursion issues!
-
 var $J = require('../js2peg'),
     str = 'myRule = "lit"\r\n',
     j2p = new $J(

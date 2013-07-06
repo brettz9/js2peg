@@ -5,8 +5,6 @@ As defined per http://tools.ietf.org/html/rfc5234#section-4
 see also: http://tools.ietf.org/html/rfc2616#section-2 and http://tools.ietf.org/html/rfc822#section-2
 */
 
-// INCOMPLETE: Recursion issues
-
 var $J = require('../js2peg');
 
 module.exports = {
