@@ -230,7 +230,7 @@ js2peg.prototype.convert = function (rules, initializer) {
                 if ([
                         '.', // Regexp any
                         '(', ')' , // Regexp groupings
-                        '&', '!', // PegJS matching modifiers
+                        '&', '!', '$', // PegJS matching modifiers
                         '/' // PegJS OR
                     ].indexOf(parsingExpression) > -1 ||
                     parsingExpression.match(/^\[[\s\S]+\]i?$/) ||
