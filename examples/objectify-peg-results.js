@@ -1,14 +1,14 @@
 /*globals module*/
-module.exports = function (rules, upperCaseHandling) {
+module.exports = function (rules, customHandler, customPattern) {
 
     'use strict';
 
-    var ruleName, rule, isUpperCase;
-    upperCaseHandling = upperCaseHandling || upperCaseHandling !== false;
+    var ruleName, rule, matchesCustom;
+    customPattern = customPattern || /^[A-Z_]+$/;
 
     for (ruleName in rules) {
-        isUpperCase = ruleName.match(/^[A-Z_]+$/);
-        if (upperCaseHandling === true && isUpperCase) {
+        matchesCustom = ruleName.match(customPattern);
+        if (customHandler === true && matchesCustom) {
             continue;
         }
         
@@ -18,8 +18,8 @@ module.exports = function (rules, upperCaseHandling) {
         rule.unshift(ruleName + ':', '(');
         rule.push(')');        
         // Todo: fix to encapsulate if last item in array is a function or braced string
-        if (isUpperCase && typeof upperCaseHandling === 'function') {
-            rule.push(upperCaseHandling(ruleName));
+        if (matchesCustom && typeof customHandler === 'function') {
+            rule.push(customHandler(ruleName));
         }
         else {
             rule.push('{\n' +

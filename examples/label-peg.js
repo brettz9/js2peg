@@ -8,7 +8,6 @@ see also: http://tools.ietf.org/html/rfc2616#section-2 and http://tools.ietf.org
 'use strict';
 
 var 
-    pegRuleName, pegRule, ignoreUpperCaseRuleNames = true,
     parser, parsed,
     peg = require('../../pegjs'),
     overrideAction = require('pegjs-override-action'),
