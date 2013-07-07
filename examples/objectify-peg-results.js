@@ -19,7 +19,7 @@ module.exports = function (rules, customHandler, customPattern) {
         rule.push(')');        
         // Todo: fix to encapsulate if last item in array is a function or braced string
         if (matchesCustom && typeof customHandler === 'function') {
-            rule.push(customHandler(ruleName));
+            rule.push(customHandler(ruleName, matchesCustom));
         }
         else {
             rule.push('{\n' +
