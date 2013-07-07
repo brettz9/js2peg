@@ -7,12 +7,14 @@ see also: http://tools.ietf.org/html/rfc2616#section-2 and http://tools.ietf.org
 (function () {
 'use strict';
 
-require('pegjs-require');
 var 
     pegRuleName, pegRule, ignoreUpperCaseRuleNames = true,
     parser, parsed,
+    peg = require('../../pegjs'),
+    overrideAction = require('pegjs-override-action'),
+    fs = require('fs'),
     $J = require('../js2peg'),
-    str = 'myRule = "lit"\r\n',
+    str = 'myRule = "lit"\r\nmyRule2 = "lit2"\r\n',
     j2p = new $J(
         { // Optional configuration object
             sortRules: false,
@@ -24,36 +26,23 @@ var
             }
         }
     ),
-    pegRules = require('./peg-src/parser.pegjs');
+    pegRules = fs.readFileSync('./peg-src/parser.pegjs', 'utf8');
 
-
-for (pegRuleName in pegRules) {
-
-    if (ignoreUpperCaseRuleNames && pegRuleName.match(/^[A-Z_$]$/)) {
-        continue;
+parser = peg.buildParser(pegRules, {
+    plugins: [overrideAction],
+    overrideActionPlugin: {
+  /*      rules: function (ast, options) {
+//            console.dir((ast.rules[1]));
+            return ast.rules.map(function () {
+                return 'aaaa';
+            });
+        }*/
     }
-    
-    pegRule = pegRules[pegRuleName];
-    pegRule = pegRules[pegRuleName] = Array.isArray(pegRule)? pegRule : [pegRule];
-    
-    pegRule.unshift(pegRuleName + ':', '(');
-    pegRule.push(')');
-    
-    // Todo: fix to encapsulate if last item in array is a function or braced string
-    pegRule.push('{\n' +
-        'var ret = {};\n' +
-        'ret["' + pegRuleName + '"] = ' + pegRuleName + ';\n'+
-        'return ret;\n' +
-    '}');
-    
-}
+});
 
-// console.log(pegRules.prose_val[6].toString());
-
-parser = j2p.buildParser(pegRules);
 parsed = parser.parse(str);
-console.log(j2p.output); // Can use this line instead of the next and then on command line, to pipe the PegJS grammar to a file, use: node label-peg.js > labeled-peg.pegjs
-//console.log(JSON.stringify(parsed)); // node label-peg.js > labeled-peg-output.js
+//console.log(j2p.output); // Can use this line instead of the next and then on command line, to pipe the PegJS grammar to a file, use: node label-peg.js > labeled-peg.pegjs
+console.log(console.dir(parsed)); // node label-peg.js > labeled-peg-output.js
 
 
 }());

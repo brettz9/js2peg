@@ -8,7 +8,7 @@ var _labelSpace = ' ',
     _expressionSequenceSpace = ' ',
     _ruleSeparator = '\n\n',
     _dummySeparator = '\x00',
-    PEG = require('pegjs');
+    PEG = require('../pegjs');
 
 /**
 * As per https://github.com/dmajda/pegjs/blob/master/src/parser.pegjs , dollar sign not allowed in PEG identifiers as with ECMAScript identifiers
@@ -230,7 +230,7 @@ js2peg.prototype.convert = function (rules, initializer) {
                 if ([
                         '.', // Regexp any
                         '(', ')' , // Regexp groupings
-                        '&', '!', // PegJS matching modifiers
+                        '&', '!', '$', // PegJS matching modifiers
                         '/' // PegJS OR
                     ].indexOf(parsingExpression) > -1 ||
                     parsingExpression.match(/^\[[\s\S]+\]i?$/) ||

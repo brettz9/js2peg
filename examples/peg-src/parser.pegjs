@@ -1,5 +1,6 @@
 {
-  var utils = require("./utils");
+  // var utils = require("./utils");
+    var utils = require("../../pegjs/lib/utils");
 }
 
 grammar
