@@ -17,7 +17,6 @@ var $J = require('../js2peg'),
     ),
     abnfRules = require('./rfc5234'),
     parser = j2p.buildParser(abnfRules),
-    // parsed = parser.parse(str);
     parsed = parser.parse(str);
 
 console.log(j2p.output); // Can use this line instead of the next and then on command line, to pipe the PegJS grammar to a file, use: node testABNF.js > abnf.pegjs
