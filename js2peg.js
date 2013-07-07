@@ -11,11 +11,12 @@ var _labelSpace = ' ',
     PEG = require('pegjs');
 
 /**
+* As per https://github.com/dmajda/pegjs/blob/master/src/parser.pegjs , dollar sign not allowed in PEG identifiers as with ECMAScript identifiers
 * @private
 * @constant
 */
-function _isECMAScriptIdentifier (val) {
-    return val.match(/^[a-z_$][0-9a-z_$]*$/i);
+function _isPegIdentifier (val) {
+    return val.match(/^[a-z_][0-9a-z_]*$/i);
 }
 
 /**
@@ -207,7 +208,7 @@ js2peg.prototype.convert = function (rules, initializer) {
             label = ruleNameLabel[1];
         }
         
-        if (!_isECMAScriptIdentifier(ruleName)) {
+        if (!_isPegIdentifier(ruleName)) {
             throw 'PegJS requires rule names to be valid JavaScript identifiers';
         }
         output += ruleName;
@@ -229,7 +230,7 @@ js2peg.prototype.convert = function (rules, initializer) {
                 if ([
                         '.', // Regexp any
                         '(', ')' , // Regexp groupings
-                        '&', '!', // PegJS matching modifiers - See below on why may wish to disallow if $ is ever used as per one of the PegJS docs
+                        '&', '!', // PegJS matching modifiers
                         '/' // PegJS OR
                     ].indexOf(parsingExpression) > -1 ||
                     parsingExpression.match(/^\[[\s\S]+\]i?$/) ||
@@ -251,7 +252,7 @@ js2peg.prototype.convert = function (rules, initializer) {
                     prev += _expressionSequenceSpace + parsingExpression.slice(0, colonPos + 1);
                     parsingExpression = parsingExpression.slice(colonPos + 1); // We'll assume the content after the colon (if any) can be added directly
                 }
-                else if (!_isECMAScriptIdentifier(parsingExpression)) {
+                else if (!_isPegIdentifier(parsingExpression)) {
                     throw 'An unrecognized parsing expression (and not confirming as an ECMAScript identifier) was provided: ' + parsingExpression + ' (which is part of the sequence: ' + parsingExpressionSeq + ')';
                 }
                 // rule name
@@ -261,14 +262,6 @@ js2peg.prototype.convert = function (rules, initializer) {
                 return prev + _expressionSequenceSpace + _getFunctionContents(parsingExpression);
             }
             if (typeof parsingExpression === 'object') {
-                /*
-                if ([
-                        '$', // This cannot be allowed as a literal, as a rule name could legitimately be "$" as a valid JS identifier
-                        '&', '!' // These could be allowed as literals, but as these are similar in purpose to '$', we may wish to require parity by disallowing these as literals
-                    ].indexOf(parsingExpression.match) > -1) {
-                    return prev + parsingExpression.match;
-                }
-                */
                 if (parsingExpression.source) {
                     return prev + _expressionSequenceSpace + parsingExpression.source + (parsingExpression.ignoreCase ? 'i' : '');
                 }
@@ -301,7 +294,7 @@ console.log('parsingExpressionSeq:' + parsingExpressionSeq);
     }, initial);
 };
 
-js2peg.isECMAScriptIdentifier = _isECMAScriptIdentifier;
+js2peg.isECMAScriptIdentifier = _isPegIdentifier;
 js2peg.stringify = _stringify;
 js2peg.repeat = _repeat;
 js2peg.getFunctionContents = _getFunctionContents;
