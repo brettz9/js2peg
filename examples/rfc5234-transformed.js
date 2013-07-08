@@ -15,7 +15,7 @@ module.exports = {
     BIT: ['"0"', '/', '"1"'],
     CHAR: /[\x01-\x7F]/, // any 7-bit US-ASCII character, excluding NUL
     CR: '"\\x0D"', // carriage return
-    CRLF: ['CRLF:', '(', 'CR', 'LF', ')', function (CRLF {
+    CRLF: ['CRLF:', '(', 'CR', 'LF', ')', function (CRLF) {
         return '\n';
     }], // Internet standard newline
     CTL: /[\x00-\x1F\x7F]/, // controls
@@ -59,8 +59,18 @@ module.exports = {
     alternation: ['concatenation', '(', 'c_wsp', '*', '"/"', 'c_wsp', '*', 'concatenation', ')', '*'], // concatenation *(*c-wsp "/" *c-wsp concatenation)
     concatenation: ['repetition', '(', 'c_wsp', '+', 'repetition', ')', '*'], // repetition *(1*c-wsp repetition)
     
-    repetition: ['min:', '(', 'DIGIT', '+', ')', '/', '(', 'min:', 'DIGIT', '*', '"*"', 'max:', 'DIGIT', '*', ')', '?', 'element:', 'element', ')', function (min, max, element) {
-        return ($J.range(element, min, max)).expr;
+    repetition: ['(', 'min:', '(', 'DIGIT', '+', ')', '/', '(', 'min2:DIGIT', '*', '"*"', 'max:', 'DIGIT', '*', ')', ')', '?', 'element:', 'element', function (min, min2, max, element) {
+console.log('mintype:'+typeof min);
+        if (typeof min === 'undefined' && typeof min === 'undefined' && typeof max === 'undefined') {
+            if (typeof element === 'undefined') {
+                return null;
+            }
+            return element;
+        }
+        min = typeof min === 'undefined' ? 0 : min;
+        min2 = typeof min2 === 'undefined' ? 0 : min2;
+        max = typeof max === 'undefined' ? undefined : max;
+        return ($J.range(element, min || min2 || 0, max)).expr;
     }], // [repeat] element
     //repetition: ['repeat', '?', 'element'], // [repeat] element
     // repeat: ['DIGIT', '+', '/', '(', 'DIGIT', '*', '"*"', 'DIGIT', '*', ')'], // 1*DIGIT / (*DIGIT "*" *DIGIT)
@@ -72,7 +82,7 @@ module.exports = {
     char_val: ['$', '(', 'DQUOTE', /[\x20-\x21\x23-\x7E]*/, 'DQUOTE', ')'], // DQUOTE *(%x20-21 / %x23-7E) DQUOTE // quoted string of SP and VCHAR without DQUOTE
     num_val: ['&', '"%"', '(', $J.or('bin_val', 'dec_val', 'hex_val'), ')'],
     
-    bin_val: ['&', '"b"', 'bin:', '(', 'BIT', '+', '(', '(', '"."', 'BIT', '+', ')', '+', '/', '(', '"-"', 'BIT', '+', ')', ')', '?', ')' function (bin) {
+    bin_val: ['&', '"b"', 'bin:', '(', 'BIT', '+', '(', '(', '"."', 'BIT', '+', ')', '+', '/', '(', '"-"', 'BIT', '+', ')', ')', '?', ')', function (bin) {
         return parseInt(bin, 2);
     }], // "b" 1*BIT [ 1*("." 1*BIT) / ("-" 1*BIT) ] // series of concatenated bit values or single ONEOF range
     dec_val: ['&', '"d"', 'dec:', '(', 'DIGIT', '+', '(', '(', '"."', 'DIGIT', '+', ')', '+', '/', '(', '"-"', 'DIGIT', '+', ')', ')', '?', ')', function (dec) {
