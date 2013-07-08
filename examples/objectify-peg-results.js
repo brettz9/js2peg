@@ -3,13 +3,22 @@ module.exports = function (rules, customHandler, customPattern) {
 
     'use strict';
 
-    var ruleName, rule, matchesCustom;
+    var ruleName, rule, matchesCustom, customHandlerResult;
     customPattern = customPattern || /^[A-Z_]+$/;
 
     for (ruleName in rules) {
-        matchesCustom = ruleName.match(customPattern);
-        if (customHandler === true && matchesCustom) {
-            continue;
+        matchesCustom = typeof customPattern === 'function' ? customPattern(ruleName, rules[ruleName], rules) : ruleName.match(customPattern);
+
+        if (matchesCustom) {
+            if (customHandler === true) {
+                continue;
+            }
+            if (typeof customHandler === 'function') {
+                customHandlerResult = customHandler(ruleName, matchesCustom);
+                if (!customHandlerResult) { // Allow rule to be completely ignored
+                    continue;
+                }
+            }
         }
         
         rule = rules[ruleName];
@@ -18,8 +27,9 @@ module.exports = function (rules, customHandler, customPattern) {
         rule.unshift(ruleName + ':', '(');
         rule.push(')');        
         // Todo: fix to encapsulate if last item in array is a function or braced string
-        if (matchesCustom && typeof customHandler === 'function') {
-            rule.push(customHandler(ruleName, matchesCustom));
+
+        if (customHandlerResult) {
+            rule.push(customHandlerResult);
         }
         else {
             rule.push('{\n' +
