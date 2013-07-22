@@ -202,7 +202,7 @@ js2peg.prototype.convert = function (rules, initializer, postTransformers) {
         });
     }
 
-    initial += typeof initializer === 'function' ? _getFunctionContents(initializer) : (initializer || '');
+    initial += typeof initializer === 'function' ? _getFunctionContents(initializer) + '\n\n' : (initializer + '\n\n' || '');
 
     this.output += ruleNames.reduce(function (output, ruleNameSeq) {
         var parsingExpressionSeq,
@@ -299,14 +299,13 @@ console.log('parsingExpressionSeq:' + parsingExpressionSeq);
         }
         */
 
-        output += partOutput; // Separate this so as to allow introspection on partOutput
-
         if (typeof postTransformers === 'function') {
-            output = postTransformers(output, ruleName);
+            partOutput = postTransformers(partOutput, ruleName, output);
         }
         else if (postTransformers && postTransformers[ruleName]) {
-            output = postTransformers[ruleName](output);
+            partOutput = postTransformers[ruleName](partOutput, output);
         }
+       output += partOutput; // Separate this so as to allow introspection on partOutput
 
         if (that.semicolons) {
             output += ';';
