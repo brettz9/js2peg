@@ -58,28 +58,45 @@ module.exports = {
     }], // ";" *(WSP / VCHAR) CRLF
     alternation: ['concatenation', '(', 'c_wsp', '*', '"/"', 'c_wsp', '*', 'concatenation', ')', '*'], // concatenation *(*c-wsp "/" *c-wsp concatenation)
     concatenation: ['repetition', '(', 'c_wsp', '+', 'repetition', ')', '*'], // repetition *(1*c-wsp repetition)
-    
-    repetition: ['(', 'min:', '(', 'DIGIT', '+', ')', '/', '(', 'min2:DIGIT', '*', '"*"', 'max:', 'DIGIT', '*', ')', ')', '?', 'element:', 'element', function (min, min2, max, element) {
-console.log('mintype:'+typeof min);
-        if (typeof min === 'undefined' && typeof min === 'undefined' && typeof max === 'undefined') {
+
+//        repetition: ['(', '(', 'DIGIT', '*', '"*"', 'DIGIT', '*', ')', '/', '(', 'DIGIT', '+', ')', ')', '?', 'element:', 'element', function (min, min2, max, element) {
+    /* if (typeof min1 === 'undefined' && typeof min2 === 'undefined' && typeof max1 === 'undefined') {
             if (typeof element === 'undefined') {
                 return null;
             }
             return element;
         }
-        min = typeof min === 'undefined' ? 0 : min;
+console.log('maxtype:'+min_max + '; mintype:' + typeof min1 + (typeof min1 === 'undefined' ? '' : min1) + '; min2type:' + typeof min2 + ' '+ element);
+
+        min1 = typeof min1 === 'undefined' ? 0 : min1;
         min2 = typeof min2 === 'undefined' ? 0 : min2;
-        max = typeof max === 'undefined' ? undefined : max;
-        return ($J.range(element, min || min2 || 0, max)).expr;
+        max1 = typeof max1 === 'undefined' ? undefined : max1;
+        return ($J.range(element, min1 || min2 || 0, max1)).expr;
+    */
+    repetition: ['min_max:', '(', 'DIGIT', '*', '"*"', 'DIGIT', '*', '/', 'DIGIT', '+', ')', '?', 'element:', 'element', function (min_max, element) {
+        if (!min_max) {
+            return element;
+        }
+        var min = parseInt(min_max[0].join(''), 10) || 0,
+            max = parseInt(min_max[2].join(''), 10);
+
+//        console.log(min +'::'+max+'::::'+ element);
+        element = Array.isArray(element) ? element.join('') : element;
+//        console.log(min +'::'+max+'::'+typeof element + '::::'+ element);
+//        console.log(($J.range(element, min, max)).expr);
+        //return ($J.range(element, min, max)).expr;
+        return range(element, min, max);
     }], // [repeat] element
     //repetition: ['repeat', '?', 'element'], // [repeat] element
     // repeat: ['DIGIT', '+', '/', '(', 'DIGIT', '*', '"*"', 'DIGIT', '*', ')'], // 1*DIGIT / (*DIGIT "*" *DIGIT)
-    element: $J.or('rulename', 'group', 'option', 'char_val', 'num_val', 'prose_val'),
+    element: ['el:', '(', $J.or('rulename', 'group', 'option', 'char_val', 'num_val', 'prose_val'), ')', function (el) {
+        return el;
+    }],
     group: ['"("', 'c_wsp', '*', 'alternation', 'c_wsp', '*', '")"'], // "(" *c-wsp alternation *c-wsp ")"
     option: ['option:', '(', '&', '"["', '&', 'c_wsp', '*', 'alternation', '&', 'c_wsp', '*', '&', '"]"', ')', function (option) {
         return option + '?';
     }], // "[" *c-wsp alternation *c-wsp "]"
-    char_val: ['$', '(', 'DQUOTE', /[\x20-\x21\x23-\x7E]*/, 'DQUOTE', ')'], // DQUOTE *(%x20-21 / %x23-7E) DQUOTE // quoted string of SP and VCHAR without DQUOTE
+    char_val: ['$', '(', 'DQUOTE', /[\x20-\x21\x23-\x7E]/, '*', 'DQUOTE', ')'], // DQUOTE *(%x20-21 / %x23-7E) DQUOTE // quoted string of SP and VCHAR without DQUOTE
     num_val: ['&', '"%"', '(', $J.or('bin_val', 'dec_val', 'hex_val'), ')'],
     
     bin_val: ['&', '"b"', 'bin:', '(', 'BIT', '+', '(', '(', '"."', 'BIT', '+', ')', '+', '/', '(', '"-"', 'BIT', '+', ')', ')', '?', ')', function (bin) {
