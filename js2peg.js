@@ -302,7 +302,7 @@ console.log('parsingExpressionSeq:' + parsingExpressionSeq);
         output += partOutput; // Separate this so as to allow introspection on partOutput
 
         if (typeof postTransformers === 'function') {
-            postTransformers(output, ruleName);
+            output = postTransformers(output, ruleName);
         }
         else if (postTransformers && postTransformers[ruleName]) {
             output = postTransformers[ruleName](output);
