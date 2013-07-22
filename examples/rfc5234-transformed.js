@@ -73,6 +73,12 @@ console.log('maxtype:'+min_max + '; mintype:' + typeof min1 + (typeof min1 === '
         max1 = typeof max1 === 'undefined' ? undefined : max1;
         return ($J.range(element, min1 || min2 || 0, max1)).expr;
     */
+    /*
+    //        console.log(min +'::'+max+'::::'+ element);
+//        console.log(min +'::'+max+'::'+typeof element + '::::'+ element);
+//        console.log(($J.range(element, min, max)).expr);
+        //return ($J.range(element, min, max)).expr;
+    */
     repetition: ['min_max:', '(', 'DIGIT', '*', '"*"', 'DIGIT', '*', '/', 'DIGIT', '+', ')', '?', 'element:', 'element', function (min_max, element) {
         if (!min_max) {
             return element;
@@ -80,11 +86,7 @@ console.log('maxtype:'+min_max + '; mintype:' + typeof min1 + (typeof min1 === '
         var min = parseInt(min_max[0].join(''), 10) || 0,
             max = parseInt(min_max[2].join(''), 10);
 
-//        console.log(min +'::'+max+'::::'+ element);
         element = Array.isArray(element) ? element.join('') : element;
-//        console.log(min +'::'+max+'::'+typeof element + '::::'+ element);
-//        console.log(($J.range(element, min, max)).expr);
-        //return ($J.range(element, min, max)).expr;
         return range(element, min, max);
     }], // [repeat] element
     //repetition: ['repeat', '?', 'element'], // [repeat] element
