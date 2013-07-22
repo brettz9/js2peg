@@ -113,14 +113,16 @@ function _orStrings () {
 * @todo Make work with non-string items?
 */
 function _range (item, min, max) {
-    var ret = (
-        _repeat(min, _dummySeparator + item) + _dummySeparator +
-            ((max && min) ?
+    var ret, isMax = max && !isNaN(max);
+    min = min || 0;
+    ret = (
+        (min ? _repeat(min, _dummySeparator + item) : (isMax ? '' : item)) + _dummySeparator +
+            (isMax ?
                 (
                     _repeat(max - min, '(' + _dummySeparator + item) + _dummySeparator +
                     _repeat(max - min, '?' + _dummySeparator + ')' + _dummySeparator)
-                ) : 
-                ' +')
+                ) :
+                (' ' + (min ? '+' : '*')))
     ). //replace(new RegExp('^' + _dummySeparator), '').
     replace(new RegExp(_dummySeparator + '$'), '').split(_dummySeparator);
 
@@ -139,6 +141,7 @@ function _exactly (item, num) {
 * @property {Boolean} sortRules Whether to sort rules alphabetically but with "start" rule on top (default is true)
 * @property {Number} indent Number of spaces to indent
 * @property {Boolean} semicolons Whether to insert semi-colons after rule parsing expressions
+* @property {Boolean} logPreParsingOutput Whether or not to log output before parsing begins (default is false)
 * @property {Object} parserOptions Allows boolean options, "cache" and "trackLineAndColumn"
 * @property {String} output The output string
 */
@@ -153,6 +156,7 @@ function js2peg (opts) {
     this.sortRules = opts.sortRules !== false;
     this.indent = _repeat(opts.indent || 2);
     this.semicolons = !!opts.semicolons;
+    this.logPreParsingOutput = opts.logPreParsingOutput || false;
     this.parserOptions = opts.parserOptions || {}; 
 }
 /**
@@ -203,6 +207,7 @@ js2peg.prototype.convert = function (rules, initializer, postTransformers) {
     this.output += ruleNames.reduce(function (output, ruleNameSeq) {
         var parsingExpressionSeq,
             label = null,
+            partOutput = '',
             ruleNameLabel = ruleNameSeq.split(':'),
             ruleName = ruleNameLabel[0];
         
@@ -222,7 +227,7 @@ js2peg.prototype.convert = function (rules, initializer, postTransformers) {
         parsingExpressionSeq = rules[ruleNameSeq];
         parsingExpressionSeq = Array.isArray(parsingExpressionSeq) ? parsingExpressionSeq : [parsingExpressionSeq];
 
-        output = parsingExpressionSeq.reduce(function (prev, parsingExpression, i, parsingExpressionSeq) {
+        partOutput = parsingExpressionSeq.reduce(function (prev, parsingExpression, i, parsingExpressionSeq) {
 //console.log('i::'+i +'::'+parsingExpression);
             var colonPos;
             if (!parsingExpression) {
@@ -285,7 +290,16 @@ console.log('parsingExpressionSeq:' + parsingExpressionSeq);
             }
             // boolean, number, xml
             throw 'Unexpected type provided as parsing expression (' + typeof parsingExpression + '): ' + parsingExpression;
-        }, output);
+        }, partOutput);
+
+
+        /*
+        if (ruleName === 'repetition') {
+            console.log(partOutput);
+        }
+        */
+
+        output += partOutput; // Separate this so as to allow introspection on partOutput
 
         if (typeof postTransformers === 'function') {
             postTransformers(output, ruleName);
@@ -298,9 +312,13 @@ console.log('parsingExpressionSeq:' + parsingExpressionSeq);
             output += ';';
         }
         output += _ruleSeparator;
-
+        // console.log(output);
         return output;
     }, initial);
+
+    if (this.logPreParsingOutput) {
+        console.log(this.output);
+    }
 };
 
 js2peg.isECMAScriptIdentifier = _isPegIdentifier;
