@@ -1,6 +1,4 @@
-/*globals require, module */
-
-var $J = require('../js2peg'),
+const $J = require('../js2peg'),
   rfc2616ParameterRules = require('./rfc2616');
 
 module.exports = $J.mixin(

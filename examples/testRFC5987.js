@@ -1,8 +1,7 @@
-/*globals require */
 (function () {
 'use strict';
 
-var $J = require('../js2peg'),
+const $J = require('../js2peg'),
   query = '//b',
   rfc5987 = require('./rfc5987-utils'),
   str = rfc5987.encodeValueChars(query),

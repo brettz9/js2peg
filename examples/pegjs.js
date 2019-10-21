@@ -1,5 +1,3 @@
-/*globals require, module */
-
 /*
 As defined per https://github.com/dmajda/pegjs/
 */
@@ -7,8 +5,7 @@ As defined per https://github.com/dmajda/pegjs/
 // This is probably not needed as available at https://github.com/dmajda/pegjs/blob/master/src/parser.pegjs
 // Should still make Peg to JS parser (using that peg parser)
 
-
-var $J = require('../js2peg');
+const $J = require('../js2peg');
 
 module.exports = {
   // Todo: Import https://github.com/dmajda/pegjs/blob/master/examples/javascript.pegjs
@@ -24,6 +21,7 @@ module.exports = {
   parsing_expression: 'expression',
   literal: 'StringLiteral',
   one_character: '"."',
+  // eslint-disable-next-line no-sparse-arrays
   characters: ['"["', , '"]"'],
   rule_name_reference: 'rule_name',
   expression: $J.or('literal', 'one_character', 'characters', 'rule_name_reference', 'parenthesized_expression', 'zero_or_more_expression', 'one_or_more_expression', 'zero_or_one_expression', 'match_ignore_expression', 'nonmatch_ignore_expression', 'match_ignore_predicate', 'nonmatch_ignore_predicate', 'labeled_expression',

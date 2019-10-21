@@ -57,7 +57,7 @@ function _isRegExp (obj) {
 function _mixin (targetObj, sourceObj, inherited) {
   inherited = !(inherited === false);
   for (const p in sourceObj) {
-    if (inherited || sourceObj.hasOwnProperty(p)) {
+    if (inherited || {}.hasOwnProperty.call(sourceObj, p)) {
       const srcObjProp = sourceObj[p];
       if (srcObjProp && typeof srcObjProp === 'object') {
         if (_isRegExp(srcObjProp)) {

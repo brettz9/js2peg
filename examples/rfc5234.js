@@ -1,11 +1,9 @@
-/*globals require, module */
-
 /*
 As defined per http://tools.ietf.org/html/rfc5234#section-4
 see also: http://tools.ietf.org/html/rfc2616#section-2 and http://tools.ietf.org/html/rfc822#section-2
 */
 
-var $J = require('../js2peg');
+const $J = require('../js2peg');
 
 module.exports = {
   start: 'rulelist',
@@ -13,9 +11,11 @@ module.exports = {
   // Core Rules (from http://tools.ietf.org/html/rfc5234#appendix-B.1 )
   ALPHA: /[a-z]/i, // [/[\x41-\x5A]/, '/', /[\x61-\x7A]/]
   BIT: ['"0"', '/', '"1"'],
+  // eslint-disable-next-line no-control-regex
   CHAR: /[\x01-\x7F]/, // any 7-bit US-ASCII character, excluding NUL
   CR: '"\\x0D"', // carriage return
   CRLF: ['CR', 'LF'], // Internet standard newline
+  // eslint-disable-next-line no-control-regex
   CTL: /[\x00-\x1F\x7F]/, // controls
   DIGIT: /[0-9]/, // /[\x30-\x39]/
   DQUOTE: '"\\x22"', // " (Double Quote)
@@ -34,6 +34,7 @@ module.exports = {
   other contexts.
   */
   LWSP: ['(', 'WSP', '/', 'CRLF', 'WSP', ')', '*'],
+  // eslint-disable-next-line no-control-regex
   OCTET: /[\x00-\xFF]/, //  8 bits of data
   SP: '" "', // '"\x20"',
   VCHAR: /[\x21-\x7E]/, // visible (printing) characters

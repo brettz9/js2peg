@@ -1,8 +1,7 @@
-/*globals require */
 (function () {
 'use strict';
 
-var $J = require('../js2peg'),
+const $J = require('../js2peg'),
   str = 'myRule = "lit"\r\n',
   j2p = new $J(
     { // Optional configuration object
@@ -16,8 +15,9 @@ var $J = require('../js2peg'),
     }
   ),
   abnfRules = require('./rfc5234'),
-  parser = j2p.buildParser(abnfRules),
-  parsed = parser.parse(str);
+  parser = j2p.buildParser(abnfRules);
+
+/* const parsed = */ parser.parse(str);
 
 console.log(j2p.output); // Can use this line instead of the next and then on command line, to pipe the PegJS grammar to a file, use: node testABNF.js > abnf.pegjs
 //console.log(JSON.stringify(parsed)); // node testABNF.js > abnf-output.js

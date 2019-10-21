@@ -1,5 +1,3 @@
-/*globals exports, unescape, escape */
-
 // In use by Content-Disposition and Link
 
 (function () {

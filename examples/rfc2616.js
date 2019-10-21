@@ -1,6 +1,4 @@
-/*globals require, module */
-
-var $J = require('../js2peg');
+const $J = require('../js2peg');
 
 module.exports = {
   start: 'parameter',
@@ -30,11 +28,13 @@ module.exports = {
   /*
   CHAR       = <any US-ASCII character (octets 0 - 127)>
   */
+ // eslint-disable-next-line no-control-regex
   'CHAR': /[\x00-\x7f]/,
   /*
   CTL      = <any US-ASCII control character
           (octets 0 - 31) and DEL (127)>
   */
+  // eslint-disable-next-line no-control-regex
   'CTL': /[\x00-\x1f\x7f]/,
   /*
   separators   =
@@ -45,7 +45,7 @@ module.exports = {
           // i.e.,   28 29 3c 3e 40 2c 3b 3a 22 2f 5b 5d 3f 3d 7b 7d 20 9
           // or   40 41 60 62 64 44 59 58 34 47 91 93 63 61 123 125 32 9
   */
-  separators: /[\(\)<>@,;:"\/\[\]?={} \t]/, // /^[\x09\x20\x22\x28\x29\x2c\x2f\x3a\x3b\x3c\x3d\x3e\x3f\x40\x5b\x5d\x7b\x7d]/,
+  separators: /[()<>@,;:"/[\]?={} \t]/, // /^[\x09\x20\x22\x28\x29\x2c\x2f\x3a\x3b\x3c\x3d\x3e\x3f\x40\x5b\x5d\x7b\x7d]/,
   /*
     http://tools.ietf.org/html/rfc5234#appendix-B.1
     LWSP       =  *(WSP / CRLF WSP)
