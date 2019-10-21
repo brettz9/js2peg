@@ -1,42 +1,42 @@
-## js2peg ##
+## js2peg
 
 Converts a custom JavaScript syntax format into the PegJS file format. Offers the benefit of allowing more flexible building of grammars (and ready syntax highlighting by JavaScript-aware apps).
 
-## Installation ##
+## Installation
 
 `npm install js2peg`
 
-## Usage ##
+## Usage
 
 Require the module...
 
-```javascript
-var $J = require('js2peg');
+```js
+const $J = require('js2peg');
 ```
 Invoke the constructor to setup initial configuration:
 
 ```javascript
 // Optional options object (below are shown the defaults)
 $J({
-    sortRules: true, // Whether to sort rules alphabetically but with "start" rule on top
-    indent: 2, // Number of spaces to indent parsing expressions
-    semicolons: false, // Whether to insert semi-colons after rule parsing expressions
-    parserOptions: {
-        cache: false, // If true, makes the parser cache results, avoiding exponential parsing time in pathological cases but making the parser slower
-        trackLineAndColumn: false // If true, makes the parser track line and column (available as line and column variables in the actions and predicates
-    }
+  sortRules: true, // Whether to sort rules alphabetically but with "start" rule on top
+  indent: 2, // Number of spaces to indent parsing expressions
+  semicolons: false, // Whether to insert semi-colons after rule parsing expressions
+  parserOptions: {
+    cache: false, // If true, makes the parser cache results, avoiding exponential parsing time in pathological cases but making the parser slower
+    trackLineAndColumn: false // If true, makes the parser track line and column (available as line and column variables in the actions and predicates
+  }
 });
 ```
 
-## Instance properties ##
+## Instance properties
 
 The properties of the above options object are also available as properties with the same name on the `$J` object.
 
 In addition, the property `output` will exist on the object to indicate the string thus far built in the PegJS format (the empty string by default), and the property `parser` will store the last built PegJS parser object (set to `null` by default).
 
-## Instance methods ##
+## Instance methods
 
-### parse ###
+### parse
 
 **Arguments**: (`str`, `rules`, `initializer = undefined`)
 
@@ -45,7 +45,7 @@ This is a convenience method which:
 1. calls `this.buildParser()` with the supplied `rules` and `initializer`
 2. calls `parse()` (on the resulting PegJS parser object) with the supplied `str` string
 
-### buildParser ###
+### buildParser
 
 **Arguments**: (`rules`, `initializer = undefined`)
 
@@ -57,7 +57,7 @@ This is a convenience method allowing you to use the same style of API as PegJS 
 
 One can then manually call the PegJS parser methods such as parse() or toSource() on the returned parser object. See `this.parse` to avoid the need for a separate `parse()` call.
 
-### convert ###
+### convert
 
 **Arguments**: (`rules`, `initializer = undefined`)
 
@@ -88,59 +88,59 @@ The values on the `rules` object may be either a **string** to be:
 
 Note that while functions and regex objects/literals are possible for convenience, all of their functionality can be represented by represented by (or easily auto-converted into) JSON-friendly code (e.g., if a web-based IDE wished to allow users to store their own transforming parsers (whether for syntax highlighting or convenient custom conversion of user input into a more verbose but widely recognized format) and validate them in an easy manner).
 
-## Class methods ##
+## Class methods
 
 The following methods are of use internally or in defining modules.
 
-### isECMAScriptIdentifier ###
+### isECMAScriptIdentifier
 
 **Arguments:** (`val`)
 
 Indicates whether the supplied value `val` matches as a valid ECMAScript identifier. (Probably of most use internally.)
 
-### stringify ###
+### stringify
 
 **Arguments:** (`str`)
 
 Returns the supplied string `str` surrounded by double-quotes and with all internal double-quotes escaped (useful for building literals without the likes of `JSON.stringify()`).
 
-### repeat ###
+### repeat
 
 **Arguments:** (`ct`, `str = ' '`)
 
 Repeats the supplied string `str` a `ct` number of times. `str` defaults to a single space.
 
-### getFunctionContents ###
+### getFunctionContents
 
 **Arguments:** (`f`)
 
 Converts a function `f` to a string (using `Function.prototype.toString()`), extracts the inner contents, and surrounds the result with curly braces. (Probably of most use internally.)
 
-### isRegExp ###
+### isRegExp
 
 **Arguments:** (`obj`)
 
 Duck type checks an object `obj` for an `exec` method to determine whether the object is a regular expression object. (Probably of most use internally.)
 
-### mixin ###
+### mixin
 
 **Arguments:** (`targetObj`, `sourceObj`, `inherited = true`)
 
 Mixes the object `sourceObj` onto the object `targetObj`, optionally (and by default) copying inherited properties as well as "own" properties of the `sourceObj`. If a property of `targetObj` already exists and the `sourceObj` is an array, the former will be overwritten by the latter (of use when a module redefines a rule), but otherwise the object will be recursively copied (creating an empty array or object when needed and not already present on the `targetObj`). Regular expression literals will be converted into JSON-stringifyable RegExp objects.
 
-### or ###
+### or
 
 **Arguments:** (`...`)
 
 Takes an indefinite number of arguments, joins them together with a PegJS OR condition (" / "), adds the result onto an object via an `expr` property, and returns the object. The `expr` property is used to identify strings which should be copied directly into the grammar result without escaping.
 
-### orStrings ###
+### orStrings
 
 **Arguments:** (`...`)
 
 A convenience method to stringify all supplied arguments and then pass them to `js2peg.or()`.
 
-### range ###
+### range
 
 **Arguments:** (`item`, `min`, `max`)
 
@@ -148,18 +148,20 @@ Builds an object with an `expr` property set to the supplied `item` string being
 
 See `js2peg.or()` regarding the `expr` property.
 
-### exactly ###
+### exactly
 
 **Arguments:** (`item`, `num`)
 
 A convenience method to call `js2peg.range()` with its `min` and `max` arguments both set to `num`.
 
-## Todos ##
+## Todos
+
 1. See about getting RFC rule examples added to https://github.com/andreineculau/core-pegjs/tree/master/src/RFC ?
 2. Allow multiple characters like ")+?" and utilize in example
-3. Redo regex strings as regex literals in example (to take advantage of more diversity in JS expression syntax highlighting) once _or refactored to convert non-strings appropriately to strings
+3. Redo regex strings as regex literals in example (to take advantage of more diversity in JS expression syntax highlighting) once or refactored to convert non-strings appropriately to strings
 
-## Possible todos ##
+## Possible todos
+
 1. Adapt PegJS to allow equivalents for ranges, etc.
 2. Adapt PegJS to allow direct parsing of this JavaScript format
 3. Adapt PegJS to build array of objects whose keys reflect rule names

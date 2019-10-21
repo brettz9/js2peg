@@ -91,7 +91,7 @@ function _mixin (targetObj, sourceObj, inherited) {
 * @constant
 */
 function _or () {
-  var arr = Array.prototype.slice.call(arguments);
+  const arr = Array.prototype.slice.call(arguments);
   return {expr: arr.join(' / ')};
 }
 /**
@@ -99,7 +99,7 @@ function _or () {
 * @constant
 */
 function _orStrings () {
-  var arr = Array.prototype.slice.call(arguments);
+  const arr = Array.prototype.slice.call(arguments);
   return _or.apply(null, arr.map(_stringify));
 }
 
@@ -113,7 +113,7 @@ function _orStrings () {
 * @todo Make work with non-string items?
 */
 function _range (item, min, max) {
-  var ret = (
+  const ret = (
     _repeat(min, _dummySeparator + item) + _dummySeparator +
       ((max && min) ?
         (
@@ -181,12 +181,13 @@ js2peg.prototype.buildParser = function (rules, initializer) {
 };
 
 js2peg.prototype.convert = function (rules, initializer) {
-  var indent = this.indent,
-    // initializerStartBrace = 0,
-    // initializerEndBrace = 0,
-    initial = this.output,
+  const indent = this.indent,
     that = this,
     ruleNames = Object.keys(rules);
+
+  let initial = this.output;
+  // initializerStartBrace = 0,
+  // initializerEndBrace = 0,
 
   if (this.sortRules) {
     ruleNames.sort(function (a, b) {
@@ -198,10 +199,10 @@ js2peg.prototype.convert = function (rules, initializer) {
   initial += typeof initializer === 'function' ? _getFunctionContents(initializer) : (initializer || '');
 
   this.output += ruleNames.reduce(function (output, ruleNameSeq) {
-    var parsingExpressionSeq,
-      label = null,
-      ruleNameLabel = ruleNameSeq.split(':'),
+    const ruleNameLabel = ruleNameSeq.split(':'),
       ruleName = ruleNameLabel[0];
+    let parsingExpressionSeq,
+      label = null;
 
     if (ruleNameLabel.length > 1) {
       label = ruleNameLabel[1];
@@ -221,7 +222,7 @@ js2peg.prototype.convert = function (rules, initializer) {
 
     output = parsingExpressionSeq.reduce(function (prev, parsingExpression, i, parsingExpressionSeq) {
 //console.log('i::'+i +'::'+parsingExpression);
-      var colonPos;
+      let colonPos;
       if (!parsingExpression) {
         throw 'Null parsing expression provided (' + typeof parsingExpression + '): ' + parsingExpression + ' as part of seq: ' + parsingExpressionSeq;
       }
