@@ -169,14 +169,14 @@ function js2peg (opts) {
 }
 */
 js2peg.prototype.parse = function (str, rules, initializer) {
-  return this.buildParser(rules, initializer).parse(str);
+  return this.generate(rules, initializer).parse(str);
 };
 
 // Allow analogous API to PEG
-js2peg.prototype.buildParser = function (rules, initializer) {
+js2peg.prototype.generate = function (rules, initializer) {
   this.convert(rules, initializer);
   // Can call toSource() on parser to get source
-  this.parser = PEG.buildParser(this.output, this.parserOptions);
+  this.parser = PEG.generate(this.output, this.parserOptions);
   return this.parser;
 };
 

@@ -42,17 +42,17 @@ In addition, the property `output` will exist on the object to indicate the stri
 
 This is a convenience method which:
 
-1. calls `this.buildParser()` with the supplied `rules` and `initializer`
+1. calls `this.generate()` with the supplied `rules` and `initializer`
 2. calls `parse()` (on the resulting PegJS parser object) with the supplied `str` string
 
-### buildParser
+### generate
 
 **Arguments**: (`rules`, `initializer = undefined`)
 
 This is a convenience method allowing you to use the same style of API as PegJS which:
 
 1. calls `this.convert()` with the supplied `rules` and `initializer`
-2. calls `PegJS.buildParser()` with the resulting output (the `this.output` property)
+2. calls `PegJS.generate()` with the resulting output (the `this.output` property)
 3. sets the `parser` property to the return value and also returns this parser object
 
 One can then manually call the PegJS parser methods such as parse() or toSource() on the returned parser object. See `this.parse` to avoid the need for a separate `parse()` call.

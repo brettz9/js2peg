@@ -17,7 +17,7 @@ const $J = require('../js2peg'),
     }
   ),
   rfc5987ParameterRules = require('./rfc5987'),
-  parser = j2p.buildParser(rfc5987ParameterRules),
+  parser = j2p.generate(rfc5987ParameterRules),
   // parsed = parser.parse(str);
   parsed = parser.parse(str, 'value_chars');
 

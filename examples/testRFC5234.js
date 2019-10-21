@@ -15,7 +15,7 @@ const $J = require('../js2peg'),
     }
   ),
   abnfRules = require('./rfc5234'),
-  parser = j2p.buildParser(abnfRules);
+  parser = j2p.generate(abnfRules);
 
 /* const parsed = */ parser.parse(str);
 
