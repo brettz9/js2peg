@@ -25,7 +25,7 @@ function _isPegIdentifier (val) {
 */
 function _stringify (str) {
     var dblQ = '"';
-    return dblQ + str.replace(/"/g, '\\"') + dblQ;
+    return dblQ + str.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + dblQ;
 }
 
 /**
@@ -120,7 +120,7 @@ function _range (item, min, max) {
                 (
                     _repeat(max - min, '(' + _dummySeparator + item) + _dummySeparator +
                     _repeat(max - min, '?' + _dummySeparator + ')' + _dummySeparator)
-                ) : 
+                ) :
                 ' +')
     ). //replace(new RegExp('^' + _dummySeparator), '').
     replace(new RegExp(_dummySeparator + '$'), '').split(_dummySeparator);
@@ -136,7 +136,7 @@ function _exactly (item, num) {
 }
 
 /**
-* 
+*
 * @property {Boolean} sortRules Whether to sort rules alphabetically but with "start" rule on top (default is true)
 * @property {Number} indent Number of spaces to indent
 * @property {Boolean} semicolons Whether to insert semi-colons after rule parsing expressions
@@ -154,7 +154,7 @@ function js2peg (opts) {
     this.sortRules = opts.sortRules !== false;
     this.indent = _repeat(opts.indent || 2);
     this.semicolons = !!opts.semicolons;
-    this.parserOptions = opts.parserOptions || {}; 
+    this.parserOptions = opts.parserOptions || {};
 }
 /**
 * @param {Object} rules Grammar rules
@@ -162,10 +162,10 @@ function js2peg (opts) {
 * @example
 {
     'myRuleName:optional JS String label': [ // rule name must be JS identifier followed by optional semicolon-label group
-    
+
     ],
     myRuleName2: [ // Unlabeled
-    
+
     ],
 }
 */
@@ -203,11 +203,11 @@ js2peg.prototype.convert = function (rules, initializer) {
             label = null,
             ruleNameLabel = ruleNameSeq.split(':'),
             ruleName = ruleNameLabel[0];
-        
+
         if (ruleNameLabel.length > 1) {
             label = ruleNameLabel[1];
         }
-        
+
         if (!_isPegIdentifier(ruleName)) {
             throw 'PegJS requires rule names to be valid JavaScript identifiers';
         }
@@ -305,10 +305,9 @@ js2peg.orStrings = _orStrings;
 js2peg.range = _range;
 js2peg.exactly = _exactly;
 
-if (module === undefined) {
+if (typeof module === 'undefined') {
     this.js2peg = js2peg;
-}
-else {
+} else {
     module.exports = js2peg;
 }
 

@@ -1,31 +1,38 @@
 {
-    "name": "js2peg",
-    "version": "0.2.3",
-    "author": {
-        "name": "Brett Zamir",
-        "email": "brettz9@yahoo.com",
-        "url": "brett-zamir.me"
-    },
-    "description": "Converts a custom JavaScript syntax format into the PegJS file format",
-    "main": "./js2peg",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/brettz9/js2peg.git"
-    },
-    "keywords": [
-        "pegjs",
-        "grammar",
-        "parser"
-    ],
-    "bundledDependencies": [
-        "pegjs"
-    ],
-    "license": "MIT",
-    "engine": {
-        "node": ">=0.10"
-    },
-    "readmeFilename": "README.md",
-    "bugs": {
-        "url": "https://github.com/brettz9/js2peg/issues"
-    }
+  "name": "js2peg",
+  "version": "0.2.4",
+  "author": {
+    "name": "Brett Zamir",
+    "email": "brettz9@yahoo.com",
+    "url": "http://brett-zamir.me"
+  },
+  "contributors": [],
+  "description": "Converts a custom JavaScript syntax format into the PegJS file format",
+  "main": "./js2peg",
+  "homepage": "https://github.com/brettz9/js2peg",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brettz9/js2peg.git"
+  },
+  "keywords": [
+    "pegjs",
+    "grammar",
+    "parser"
+  ],
+  "engines": {
+    "node": ">= 0.1.14"
+  },
+  "license": "MIT",
+  "engine": {
+    "node": ">=0.10"
+  },
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/brettz9/js2peg/issues"
+  },
+  "bundledDependencies": [
+    "pegjs"
+  ],
+  "dependencies": {},
+  "devDependencies": {}
 }
