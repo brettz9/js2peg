@@ -20,7 +20,7 @@
     "parser"
   ],
   "engines": {
-    "node": ">= 0.1.14"
+    "node": ">=6.0.0"
   },
   "license": "MIT",
   "engine": {
@@ -30,9 +30,13 @@
   "bugs": {
     "url": "https://github.com/brettz9/js2peg/issues"
   },
-  "bundledDependencies": [
-    "pegjs"
-  ],
-  "dependencies": {},
-  "devDependencies": {}
+  "scripts": {
+    "eslint": "eslint --ext=js,md.html ."
+  },
+  "dependencies": {
+    "pegjs": "0.10.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.5.1"
+  }
 }
